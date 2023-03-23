@@ -47,5 +47,5 @@ bash scripts/run_reverie.sh # (run_soon.sh, run_r2r.sh)
 ```
 
 
-# Acknowledgments
+## Acknowledgments
 Our code is based on [VLN-DUET](https://github.com/cshizhe/VLN-DUET), [Xmodal-Ctx](https://github.com/GT-RIPL/Xmodal-Ctx) and [CLIP (ViT-B/16)](https://github.com/openai/CLIP). Thanks for their great works!
