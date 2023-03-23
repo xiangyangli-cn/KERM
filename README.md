@@ -30,8 +30,12 @@ wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
 6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1_rnAKNIqtDghwc2FekZO6Q?pwd=jphg).
 
 ## Build knowledge base
+The preprocessed knowledge data is provided, you can skip this part.
 ```
-
+cd preprocess
+python3 get_knowledge_base.py  # Build knowledge base from VisualGenome dataset.
+python3 get_crop_image.py  # Get cropped image features.
+python3 retrieve_facts.py  # Retrieve knowledge facts for all visual regions. 
 ```
 
 ## Pretraining
