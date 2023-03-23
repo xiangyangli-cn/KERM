@@ -19,7 +19,7 @@ conda activate KERM
 pip install -r requirements.txt
 ```
 
-3. Download data from [Dropbox](https://www.dropbox.com/sh/u3lhng7t2gq36td/AABAIdFnJxhhCg2ItpAhMtUBa?dl=0), including processed annotations, features and pretrained models of REVERIE, SOON, R2R and R4R datasets. Put the data in `datasets' directory.
+3. Download data from [Dropbox](https://www.dropbox.com/sh/u3lhng7t2gq36td/AABAIdFnJxhhCg2ItpAhMtUBa?dl=0), including processed annotations, features and pretrained models from DUET(https://github.com/cshizhe/VLN-DUET). Put the data in `datasets' directory.
 
 4. Download pretrained lxmert
 ```
