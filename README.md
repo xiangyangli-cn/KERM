@@ -25,7 +25,7 @@ pip install -r requirements.txt
 mkdir -p datasets/pretrained 
 wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
 ```
-5. Download preprocessed data and features of KERM from [Baidu Netdisk](https://pan.baidu.com/s/1V-dmZaesy18_eARBRMUOqQ?pwd=ah8t), including features of knowledge base (vg.json), annotations of retrieved facts (knowledge.json), cropped image features (clip_crop_image.hdf5). Put the 'kerm_data' in `datasets' directory.
+5. Download preprocessed data and features of KERM from [Baidu Netdisk](https://pan.baidu.com/s/1V-dmZaesy18_eARBRMUOqQ?pwd=ah8t), including features of knowledge base (vg.json), annotations of retrieved facts (knowledge.json), cropped image features (clip_crop_image.hdf5), and annotations of VisualGenome dataset (vg_annotations). Put the 'kerm_data' in `datasets' directory.
 
 6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1_rnAKNIqtDghwc2FekZO6Q?pwd=jphg).
 
