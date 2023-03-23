@@ -43,9 +43,9 @@ class SoonObjectNavBatch(object):
     ):
         self.env = EnvBatch(connectivity_dir, feat_db=view_db, batch_size=batch_size)
         self.obj_db = obj_db
-        self.crop_db = FeaturesDB("./clip_crop_image.hdf5")
-        self.knowledge_db = FeaturesDB("./vg.hdf5")
-        self.viewpoint_knowledge = json.load(open('./knowledge.json','r'))
+        self.crop_db = FeaturesDB("../datasets/kerm_data/clip_crop_image.hdf5")
+        self.knowledge_db = FeaturesDB("../datasets/kerm_data/vg.hdf5")
+        self.viewpoint_knowledge = json.load(open('../datasets/kerm_data/knowledge.json','r'))
         self.data = instr_data
         self.scans = set([x['scan'] for x in self.data])
         self.multi_endpoints = multi_endpoints

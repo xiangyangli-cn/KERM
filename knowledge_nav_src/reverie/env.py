@@ -41,9 +41,9 @@ class EnvBatch(object):
         :param batch_size:  Used to create the simulator list.
         """
         self.feat_db = feat_db
-        self.crop_db = FeaturesDB("./clip_crop_image.hdf5")
-        self.knowledge_db = FeaturesDB("./vg.hdf5")
-        self.viewpoint_knowledge = json.load(open('./knowledge.json','r'))
+        self.crop_db = FeaturesDB("../datasets/kerm_data/clip_crop_image.hdf5")
+        self.knowledge_db = FeaturesDB("../datasets/kerm_data/vg.hdf5")
+        self.viewpoint_knowledge = json.load(open('../datasets/kerm_data/knowledge.json','r'))
         self.image_w = 640
         self.image_h = 480
         self.vfov = 60

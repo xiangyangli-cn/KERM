@@ -37,9 +37,9 @@ class ReverieTextPathData(object):
     ):
         self.img_ft_file = img_ft_file
         self.obj_ft_file = obj_ft_file
-        self.crop_db = FeaturesDB("./clip_crop_image.hdf5")
-        self.knowledge_db = FeaturesDB("./vg.hdf5")
-        self.viewpoint_knowledge = json.load(open('./knowledge.json','r'))
+        self.crop_db = FeaturesDB("../datasets/kerm_data/clip_crop_image.hdf5")
+        self.knowledge_db = FeaturesDB("../datasets/kerm_data/vg.hdf5")
+        self.viewpoint_knowledge = json.load(open('../datasets/kerm_data/knowledge.json','r'))
 
         self.image_feat_size = image_feat_size
         self.image_prob_size = image_prob_size
