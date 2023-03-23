@@ -30,4 +30,9 @@ wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
 5. Download preprocessed data and features of KERM from [Baidu Netdisk](https://pan.baidu.com/s/1V-dmZaesy18_eARBRMUOqQ?pwd=ah8t), including features of knowledge base (vg.json), annotations of retrieved facts (knowledge.json), cropped image features (clip_crop_image.hdf5). Put the 'kerm_data' in `datasets' directory.
 
 
-6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1V-dmZaesy18_eARBRMUOqQ?pwd=ah8t).
+6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1_rnAKNIqtDghwc2FekZO6Q?pwd=jphg).
+
+
+
+# Acknowledgments
+Our code is based on [VLN-DUET](https://github.com/ArrowLuo/CLIP4Clip](https://github.com/cshizhe/VLN-DUET), [Xmodal-Ctx](https://github.com/GT-RIPL/Xmodal-Ctx) and [CLIP (ViT-B/16)](https://github.com/openai/CLIP). Thanks for their great works!
