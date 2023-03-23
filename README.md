@@ -18,7 +18,6 @@ conda create --name KERM python=3.8.0
 conda activate KERM
 pip install -r requirements.txt
 ```
-
 3. Download dataset from [Dropbox](https://www.dropbox.com/sh/u3lhng7t2gq36td/AABAIdFnJxhhCg2ItpAhMtUBa?dl=0), including processed annotations, features and pretrained models from [VLN-DUET](https://github.com/cshizhe/VLN-DUET). Put the data in `datasets' directory.
 
 4. Download pretrained lxmert
@@ -26,12 +25,26 @@ pip install -r requirements.txt
 mkdir -p datasets/pretrained 
 wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
 ```
-
 5. Download preprocessed data and features of KERM from [Baidu Netdisk](https://pan.baidu.com/s/1V-dmZaesy18_eARBRMUOqQ?pwd=ah8t), including features of knowledge base (vg.json), annotations of retrieved facts (knowledge.json), cropped image features (clip_crop_image.hdf5). Put the 'kerm_data' in `datasets' directory.
-
 
 6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1_rnAKNIqtDghwc2FekZO6Q?pwd=jphg).
 
+
+## Pretraining
+
+Combine behavior cloning and auxiliary proxy tasks in pretraining:
+```pretrain
+cd pretrain_src
+bash run_reverie.sh # (run_soon.sh, run_r2r.sh, run_r4r.sh)
+```
+
+## Fine-tuning & Evaluation
+
+Use pseudo interative demonstrator to fine-tune the model:
+```finetune
+cd knowledge_nav_src
+bash scripts/run_reverie.sh # (run_soon.sh, run_r2r.sh)
+```
 
 
 # Acknowledgments
