@@ -29,6 +29,10 @@ wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
 
 6. Download trained KERM models from [Baidu Netdisk](https://pan.baidu.com/s/1_rnAKNIqtDghwc2FekZO6Q?pwd=jphg).
 
+## Build knowledge base
+```
+
+```
 
 ## Pretraining
 
