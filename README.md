@@ -59,7 +59,7 @@ bash scripts/run_reverie.sh # (run_soon.sh, run_r2r.sh)
 
 ```bibtex
 @InProceedings{Li2023KERM,
-  author  = Xiangyang Li and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang},
+  author  = {Xiangyang Li and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang},
   title   = {{KERM: K}nowledge Enhanced Reasoning for Vision-and-Language Navigation},
   booktitle = {CVPR},
   year    = {2023}
