@@ -62,8 +62,8 @@ bash scripts/run_reverie.sh # (run_soon.sh, run_r2r.sh)
   author  = Xiangyang Li and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang},
   title   = {{KERM: K}nowledge Enhanced Reasoning for Vision-and-Language Navigation},
   booktitle = {CVPR},
-  year    = {2023},
-}
+  year    = {2023}
+  ```
 
 ## Acknowledgments
 Our code is based on [VLN-DUET](https://github.com/cshizhe/VLN-DUET), [Xmodal-Ctx](https://github.com/GT-RIPL/Xmodal-Ctx) and [CLIP (ViT-B/16)](https://github.com/openai/CLIP). Thanks for their great works!
