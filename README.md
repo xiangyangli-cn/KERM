@@ -35,7 +35,7 @@ The preprocessed knowledge data is provided, you can skip this part.
 cd preprocess
 python3 get_knowledge_base.py  # Build knowledge base from VisualGenome dataset (vg.json).
 python3 get_fact_feature.py  # Get the features of knowledge base (vg.hdf5).
-python3 get_crop_image.py  # Get cropped image features (clip_crop_image.hdf5).
+python3 get_crop_image_feature.py  # Get cropped image features (clip_crop_image.hdf5).
 python3 retrieve_facts.py  # Retrieve knowledge facts for all visual regions (knowledge.json). 
 ```
 
