@@ -1,8 +1,8 @@
 # KERM: Knowledge Enhanced Reasoning for Vision-and-Language Navigation
 
-###<a href='https://xiangyangli20.github.io/'>Xiangyang Li</a> and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang
+### <a href='https://xiangyangli20.github.io/'>Xiangyang Li</a> and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang
 
-This repository is the official implementation of ##[KERM: Knowledge Enhanced Reasoning for Vision-and-Language Navigation]##
+This repository is the official implementation of **[KERM: Knowledge Enhanced Reasoning for Vision-and-Language Navigation]**
 
 >Vision-and-language navigation (VLN) is the task to enable an embodied agent to navigate to a remote location following the natural language instruction in real scenes. Most of the previous approaches utilize the entire features or object-centric features to represent navigable candidates. However, these representations are not efficient enough for an agent to navigate to the target location. As knowledge provides crucial information which is complementary to visible content, in this paper, we propose a knowledge enhanced reasoning model (KERM) to leverage knowledge to improve agent navigation ability. Specifically, we first retrieve facts for the navigation views from the constructed knowledge base. And than we build a knowledge enhanced reasoning network, containing purification, fact-aware interaction, and instruction-guided aggregation modules, to integrate the visual features, history features, instruction features, and fact features for action prediction. Extensive experiments are conducted on the REVERIE, R2R, and SOON datasets. Experimental results demonstrate the effectiveness of the proposed method.
 
