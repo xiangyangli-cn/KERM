@@ -1,6 +1,6 @@
 # KERM: Knowledge Enhanced Reasoning for Vision-and-Language Navigation
 
-Xiangyang Li and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang
+Xiangyang Li((https://xiangyangli20.github.io/) and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang
 
 This repository is the official implementation of [KERM: Knowledge Enhanced Reasoning for Vision-and-Language Navigation]
 
