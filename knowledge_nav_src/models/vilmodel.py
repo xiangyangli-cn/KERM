@@ -731,7 +731,7 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
         return txt_embeds
 
     def forward_panorama_per_step(
-        self, view_img_fts, obj_img_fts, loc_fts, nav_types, view_lens, obj_lens, instruction_fts, knowledge_fts,crop_fts,gmap_img_embeds, gmap_step_ids, gmap_pos_fts
+        self, view_img_fts, obj_img_fts, loc_fts, nav_types, view_lens, obj_lens, instruction_fts, knowledge_fts,crop_fts, used_cand_ids, gmap_img_embeds, gmap_step_ids, gmap_pos_fts
     ):
         global CROP_SIZE
         batch_size = view_img_fts.size(0)
@@ -814,7 +814,19 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
         fusion_fts = self.final_ffn(fusion_fts)
         fusion_fts = self.final_layer_norm(fusion_fts)
 
-        view_img_fts[:,:36,:] = view_img_fts[:,:36,:] + fusion_fts
+
+        for i in range(batch_size):
+            view_ft_id = 0
+            for cand_id in range(36):
+                if cand_id in used_cand_ids[i]:
+                    view_img_fts[i,view_ft_id] = fusion_fts[i,cand_id] + view_img_fts[i,view_ft_id]
+                    view_ft_id += 1
+
+            for cand_id in range(36):
+                if cand_id not in used_cand_ids[i]:
+                    view_img_fts[i,view_ft_id] = fusion_fts[i,cand_id] + view_img_fts[i,view_ft_id]
+                    view_ft_id += 1
+           
 
         view_img_embeds = self.img_embeddings.img_layer_norm(
             self.img_embeddings.img_linear(view_img_fts)
@@ -952,7 +964,7 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
         elif mode == 'panorama':
             pano_embeds, pano_masks = self.forward_panorama_per_step(
                 batch['view_img_fts'], batch['obj_img_fts'], batch['loc_fts'],
-                batch['nav_types'], batch['view_lens'], batch['obj_lens'], batch['instruction_fts'], batch['knowledge_fts'], batch['crop_fts'],batch['gmap_img_embeds'], 
+                batch['nav_types'], batch['view_lens'], batch['obj_lens'], batch['instruction_fts'], batch['knowledge_fts'], batch['crop_fts'], batch['used_cand_ids'], batch['gmap_img_embeds'], 
                 batch['gmap_step_ids'], batch['gmap_pos_fts']
             )
             return pano_embeds, pano_masks

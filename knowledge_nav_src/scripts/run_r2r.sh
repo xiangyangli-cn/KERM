@@ -37,7 +37,7 @@ flag="--root_dir ${DATA_ROOT}
       --max_action_len 15
       --max_instr_len 200
 
-      --batch_size 1
+      --batch_size 4
       --lr 1e-5
       --iters 5000
       --log_every 100
@@ -62,7 +62,7 @@ flag="--root_dir ${DATA_ROOT}
       #--eval_first
 
 # test
-python3 main_nav.py $flag  \
+CUDA_VISIBLE_DEVICES='3'  python3 main_nav.py $flag  \
       --tokenizer bert --world_size 0 \
-      --resume_file ../datasets/R2R/exprs_map/finetune/dagger-vitbase-seed.0-init.aug.45k/ckpts/best \
+      --resume_file ../datasets/R2R/exprs_map/finetune/dagger-vitbase-seed.0-init.aug.45k/ckpts/freeze_best \
       --test --submit

@@ -54,6 +54,8 @@ class GMapNavAgent(Seq2SeqAgent):
         batch_view_lens, batch_cand_vpids = [], []
         knowledge_fts, crop_fts = [], []
         global CROP_SIZE
+        used_cand_ids = []
+
         for i, ob in enumerate(obs):
             view_img_fts, view_ang_fts, nav_types, cand_vpids = [], [], [], []
             # cand views
@@ -64,6 +66,8 @@ class GMapNavAgent(Seq2SeqAgent):
                 nav_types.append(1)
                 cand_vpids.append(cc['viewpointId'])
                 used_viewidxs.add(cc['pointId'])
+
+            used_cand_ids.append(used_viewidxs)
             # non cand views
             view_img_fts.extend([x[:self.args.image_feat_size] for k, x \
                 in enumerate(ob['feature']) if k not in used_viewidxs])
@@ -98,7 +102,7 @@ class GMapNavAgent(Seq2SeqAgent):
         return {
             'view_img_fts': batch_view_img_fts, 'loc_fts': batch_loc_fts, 
             'nav_types': batch_nav_types, 'view_lens': batch_view_lens, 
-            'cand_vpids': batch_cand_vpids,'knowledge_fts': knowledge_fts,  'crop_fts': crop_fts
+            'cand_vpids': batch_cand_vpids,'knowledge_fts': knowledge_fts,  'crop_fts': crop_fts, 'used_cand_ids': used_cand_ids
         }
 
     def _nav_gmap_variable(self, obs, gmaps):

@@ -243,8 +243,8 @@ def valid(args, train_env, val_envs, rank=-1):
         write_to_record_file(str(args) + '\n\n', record_file)
 
     for env_name, env in val_envs.items():
-        if os.path.exists(os.path.join(args.pred_dir, "submit_%s.json" % env_name)):
-            continue
+        #if os.path.exists(os.path.join(args.pred_dir, "submit_%s.json" % env_name)):
+        #    continue
         agent.logs = defaultdict(list)
         agent.env = env
 

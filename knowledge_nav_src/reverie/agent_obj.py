@@ -53,6 +53,7 @@ class GMapObjectNavAgent(Seq2SeqAgent):
         batch_view_lens, batch_obj_lens = [], []
         batch_cand_vpids, batch_objids = [], []
         knowledge_fts, crop_fts = [], []
+        used_cand_ids = []
         global CROP_SIZE
         for i, ob in enumerate(obs):
             view_img_fts, view_ang_fts, nav_types, cand_vpids = [], [], [], []
@@ -64,6 +65,7 @@ class GMapObjectNavAgent(Seq2SeqAgent):
                 nav_types.append(1)
                 cand_vpids.append(cc['viewpointId'])
                 used_viewidxs.add(cc['pointId'])
+            used_cand_ids.append(used_viewidxs)
             # non cand views
             view_img_fts.extend([x[:self.args.image_feat_size] for k, x \
                 in enumerate(ob['feature']) if k not in used_viewidxs])
@@ -108,7 +110,7 @@ class GMapObjectNavAgent(Seq2SeqAgent):
             'view_img_fts': batch_view_img_fts, 'obj_img_fts': batch_obj_img_fts, 
             'loc_fts': batch_loc_fts, 'nav_types': batch_nav_types,
             'view_lens': batch_view_lens, 'obj_lens': batch_obj_lens,
-            'cand_vpids': batch_cand_vpids, 'obj_ids': batch_objids, 'knowledge_fts': knowledge_fts,  'crop_fts': crop_fts
+            'cand_vpids': batch_cand_vpids, 'obj_ids': batch_objids, 'knowledge_fts': knowledge_fts,  'crop_fts': crop_fts, 'used_cand_ids':used_cand_ids
         }
 
     def _nav_gmap_variable(self, obs, gmaps):

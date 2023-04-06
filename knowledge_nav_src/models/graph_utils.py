@@ -116,7 +116,7 @@ class GraphMap(object):
             self.node_embeds[vp] = [embed, 1]
         else:
             if vp in self.node_embeds:
-                self.node_embeds[vp][0] = self.node_embeds[vp][0] + embed
+                self.node_embeds[vp][0] += embed
                 self.node_embeds[vp][1] += 1
             else:
                 self.node_embeds[vp] = [embed, 1]

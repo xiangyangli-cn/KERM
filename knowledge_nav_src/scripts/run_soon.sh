@@ -65,7 +65,7 @@ flag="--root_dir ${DATA_ROOT}
      #--eval_first
 
 # test
-python3 main.py $flag  \
+CUDA_VISIBLE_DEVICES='6' python3 main.py $flag  \
       --tokenizer bert --world_size 0 \
-      --resume_file ../datasets/SOON/exprs_map/finetune/dagger-vitbase-seed.0/ckpts/best \
+      --resume_file ../datasets/SOON/exprs_map/finetune/dagger-vitbase-seed.0/ckpts/best_new \
       --test --submit

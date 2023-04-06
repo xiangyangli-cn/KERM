@@ -39,7 +39,7 @@ flag="--root_dir ${DATA_ROOT}
       --max_instr_len 200
       --max_objects 20
 
-      --batch_size 1
+      --batch_size 4
       --lr 1e-5
       --iters 20000
       --log_every 1000
@@ -66,7 +66,7 @@ flag="--root_dir ${DATA_ROOT}
       #--eval_first
 
 # test
-python3  main_nav_obj.py $flag  \
+CUDA_VISIBLE_DEVICES='2' python3  main_nav_obj.py $flag  \
       --tokenizer bert  --world_size 0 \
-      --resume_file ../datasets/REVERIE/exprs_map/finetune/dagger-vitbase-seed.0/ckpts/best \
+      --resume_file ../datasets/REVERIE/exprs_map/finetune/dagger-vitbase-seed.0/ckpts/all_best \
       --test --submit
