@@ -22,7 +22,7 @@ pip install -r requirements.txt
 ```
 3. Download dataset from [Dropbox](https://www.dropbox.com/sh/u3lhng7t2gq36td/AABAIdFnJxhhCg2ItpAhMtUBa?dl=0), including processed annotations, features and pretrained models from [VLN-DUET](https://github.com/cshizhe/VLN-DUET). Put the data in `datasets' directory.
 
-4. Download pretrained lxmert
+4. Download pretrained lxmert, and some files in directory `bert-base` can be downloaded at [bert-base-uncased](https://huggingface.co/bert-base-uncased/tree/main).
 ```
 mkdir -p datasets/pretrained 
 wget https://nlp.cs.unc.edu/data/model_LXRT.pth -P datasets/pretrained
