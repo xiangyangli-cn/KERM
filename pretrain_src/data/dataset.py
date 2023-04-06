@@ -463,7 +463,7 @@ class R2RTextPathData(ReverieTextPathData):
             gt_path = gt_path[:TRAIN_MAX_STEP] + [end_vp]
             
         traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, \
-            last_vp_angles = self.get_traj_pano_fts(scan, gt_path)
+            last_vp_angles, knowledge_fts = self.get_traj_pano_fts(scan, gt_path)
 
         # global: the first token is [stop]
         gmap_vpids, gmap_step_ids, gmap_visited_masks, gmap_pos_fts, gmap_pair_dists = \
@@ -491,6 +491,7 @@ class R2RTextPathData(ReverieTextPathData):
 
             'vp_pos_fts': vp_pos_fts,
             'vp_angles': last_vp_angles,
+            'knowledge_fts': knowledge_fts,
         }
 
         if return_act_label:
@@ -512,7 +513,7 @@ class R2RTextPathData(ReverieTextPathData):
         Each token consists of (img_fts, loc_fts (ang_fts, box_fts), nav_types)
         '''
         traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids = [], [], [], []
-        knowledge_fts, crop_fts = [], []
+        knowledge_fts = []
 
         for vp in path:
             view_fts = self.get_scanvp_feature(scan, vp)
@@ -545,8 +546,29 @@ class R2RTextPathData(ReverieTextPathData):
             
             last_vp_angles = view_angles
 
+            key = "%s_%s" % (scan, vp)
+            knowledge_feature = []
 
-        return traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, last_vp_angles
+            global CROP_SIZE
+            for i in range(36):
+                view_feature = []
+                for j in range(CROP_SIZE):
+                    knowledge_ids = self.viewpoint_knowledge[key+'_'+str(i)+'_'+str(j)][:5]
+
+                    for k in knowledge_ids:
+                        crop_feature = self.knowledge_db.get_feature(str(k))
+                        view_feature.append(crop_feature.reshape(1,512))
+                view_feature = np.concatenate(view_feature,axis=0)
+                knowledge_feature.append(view_feature.reshape(1,CROP_SIZE*CROP_SIZE,512))
+
+            knowledge_feature = np.concatenate(knowledge_feature,axis=0)
+            knowledge_fts.append(knowledge_feature.reshape(1,36,CROP_SIZE*CROP_SIZE,512))
+
+
+        knowledge_fts = torch.tensor(np.concatenate(knowledge_fts,axis=0))
+
+
+        return traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, last_vp_angles, knowledge_fts
 
 
 class SoonTextPathData(ReverieTextPathData):
