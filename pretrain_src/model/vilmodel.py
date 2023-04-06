@@ -677,15 +677,18 @@ class GlocalTextPathCMT(BertPreTrainedModel):
 
         self.fusion_layer_norm = BertLayerNorm(768, eps=1e-12)
 
-        self.final_ffn = nn.Linear(768*3, 768)
+        self.final_ffn = nn.Linear(768*2, 768)
         self.final_layer_norm = BertLayerNorm(768, eps=1e-12)
+
+        scale = 768 ** -0.5
+        self.no_history_embedding = nn.Parameter(scale * torch.randn(1, 768))
 
         self.init_weights()
 
     def forward(
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-        gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts,
+        gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids,
         return_gmap_embeds=True
     ):        
         
@@ -719,12 +722,12 @@ class GlocalTextPathCMT(BertPreTrainedModel):
                 split_traj_embeds, split_traj_vp_lens, traj_vpids, traj_cand_vpids, gmap_vpids,
                 gmap_step_ids, gmap_pos_fts, gmap_lens
             )
-            gmap_embeds = gmap_embeds[:,1:step+1]
+            gmap_embeds_step = gmap_embeds[:,1:step+2]
  
             # History feature
             if step == 0:
 
-                history_fts = self.history_proj(gmap_embeds).unsqueeze(1).repeat(1,36,1,1)
+                history_fts = self.history_proj(gmap_embeds_step).unsqueeze(1).repeat(1,36,1,1)
                 history_fts_shape = history_fts.shape
 
             knowledge_ft = self.knowledge_proj(knowledge_ft)
@@ -782,16 +785,26 @@ class GlocalTextPathCMT(BertPreTrainedModel):
             
             view_fts = traj_view_img_fts[traj_ids]
             if step != 0:
-                fusion_fts = torch.cat([view_fts[:,:36,:],crop_knowledge_ft,history_knowledge_ft],dim=-1)
+                fusion_fts = torch.cat([crop_knowledge_ft,history_knowledge_ft],dim=-1)
 
             else:
-                fusion_fts = torch.cat([view_fts[:,:36,:],crop_knowledge_ft,torch.zeros_like(crop_knowledge_ft)],dim=-1)
+                fusion_fts = torch.cat([crop_knowledge_ft,self.no_history_embedding.unsqueeze(0).repeat(batch_size,36,1)],dim=-1)
 
 
             fusion_fts = self.final_ffn(fusion_fts)
             fusion_fts = self.final_layer_norm(fusion_fts)
 
-            traj_view_img_fts[traj_ids][:,:36] = traj_view_img_fts[traj_ids][:,:36] + fusion_fts
+            for i in range(batch_size):
+                view_ft_id = 0
+                for cand_id in range(36):
+                    if step < len(used_cand_ids[i]) and cand_id in used_cand_ids[i][step]:
+                        traj_view_img_fts[traj_ids][i,view_ft_id] = fusion_fts[i,cand_id] + traj_view_img_fts[traj_ids][i,view_ft_id]
+                        view_ft_id += 1
+
+                for cand_id in range(36):
+                    if step < len(used_cand_ids[i]) and cand_id not in used_cand_ids[i][step]:
+                        traj_view_img_fts[traj_ids][i,view_ft_id] = fusion_fts[i,cand_id] + traj_view_img_fts[traj_ids][i,view_ft_id]
+                        view_ft_id += 1
 
         traj_view_img_fts = traj_view_img_fts.contiguous()
         split_traj_embeds, split_traj_vp_lens = self.img_embeddings(
@@ -835,7 +848,7 @@ class GlocalTextPathCMT(BertPreTrainedModel):
     def forward_mlm(
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-        gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts
+        gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids
     ):
 
         global CROP_SIZE
@@ -868,12 +881,12 @@ class GlocalTextPathCMT(BertPreTrainedModel):
                 split_traj_embeds, split_traj_vp_lens, traj_vpids, traj_cand_vpids, gmap_vpids,
                 gmap_step_ids, gmap_pos_fts, gmap_lens
             )
-            gmap_embeds = gmap_embeds[:,1:step+1]
+            gmap_embeds_step = gmap_embeds[:,1:step+2]
  
             # History feature
             if step == 0:
 
-                history_fts = self.history_proj(gmap_embeds).unsqueeze(1).repeat(1,36,1,1)
+                history_fts = self.history_proj(gmap_embeds_step).unsqueeze(1).repeat(1,36,1,1)
                 history_fts_shape = history_fts.shape
 
             knowledge_ft = self.knowledge_proj(knowledge_ft)
@@ -931,16 +944,26 @@ class GlocalTextPathCMT(BertPreTrainedModel):
             
             view_fts = traj_view_img_fts[traj_ids]
             if step != 0:
-                fusion_fts = torch.cat([view_fts[:,:36,:],crop_knowledge_ft,history_knowledge_ft],dim=-1)
+                fusion_fts = torch.cat([crop_knowledge_ft,history_knowledge_ft],dim=-1)
 
             else:
-                fusion_fts = torch.cat([view_fts[:,:36,:],crop_knowledge_ft,torch.zeros_like(crop_knowledge_ft)],dim=-1)
+                fusion_fts = torch.cat([crop_knowledge_ft,self.no_history_embedding.unsqueeze(0).repeat(batch_size,36,1)],dim=-1)
 
 
             fusion_fts = self.final_ffn(fusion_fts)
             fusion_fts = self.final_layer_norm(fusion_fts)
 
-            traj_view_img_fts[traj_ids][:,:36] = fusion_fts
+            for i in range(batch_size):
+                view_ft_id = 0
+                for cand_id in range(36):
+                    if step < len(used_cand_ids[i]) and cand_id in used_cand_ids[i][step]:
+                        traj_view_img_fts[traj_ids][i,view_ft_id] = fusion_fts[i,cand_id] + traj_view_img_fts[traj_ids][i,view_ft_id]
+                        view_ft_id += 1
+
+                for cand_id in range(36):
+                    if step < len(used_cand_ids[i]) and cand_id not in used_cand_ids[i][step]:
+                        traj_view_img_fts[traj_ids][i,view_ft_id] = fusion_fts[i,cand_id] + traj_view_img_fts[traj_ids][i,view_ft_id]
+                        view_ft_id += 1
 
         traj_view_img_fts = traj_view_img_fts.contiguous()
 

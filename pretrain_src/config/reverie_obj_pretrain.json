@@ -1,6 +1,6 @@
 {
   "model_config": "",
-  "checkpoint": "../datasets/REVERIE/exprs_map/pretrain/cmt-vitbase-mlm.mrc.sap.og-init.lxmert-aug.speaker-20w/ckpts/model_step_200000.pt",
+  "checkpoint": null,
   "output_dir": "",
   "mrc_mask_prob": 0.15,
   "itm_neg_imgs": 5,

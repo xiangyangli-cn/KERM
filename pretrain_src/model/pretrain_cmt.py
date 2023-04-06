@@ -78,7 +78,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
                 batch['traj_vpids'], batch['traj_cand_vpids'], 
                 batch['gmap_lens'], batch['gmap_step_ids'], batch['gmap_pos_fts'], 
                 batch['gmap_pair_dists'], batch['gmap_vpids'], batch['vp_pos_fts'],
-                batch['txt_labels'], batch['knowledge_fts'], batch['crop_fts'],compute_loss
+                batch['txt_labels'], batch['knowledge_fts'], batch['crop_fts'], batch['used_cand_ids'], compute_loss
             )
         elif task.startswith('mrc'):
             return self.forward_mrc(
@@ -89,7 +89,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
                 batch['gmap_lens'], batch['gmap_step_ids'], batch['gmap_pos_fts'], 
                 batch['gmap_pair_dists'], batch['gmap_vpids'], batch['vp_pos_fts'],
                 batch['vp_view_mrc_masks'], batch['vp_view_probs'], 
-                batch['vp_obj_mrc_masks'], batch['vp_obj_probs'], batch['knowledge_fts'], batch['crop_fts'],compute_loss
+                batch['vp_obj_mrc_masks'], batch['vp_obj_probs'], batch['knowledge_fts'], batch['crop_fts'],batch['used_cand_ids'],compute_loss
             )
         elif task.startswith('sap'):
             return self.forward_sap(
@@ -100,7 +100,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
                 batch['gmap_lens'], batch['gmap_step_ids'], batch['gmap_pos_fts'], 
                 batch['gmap_pair_dists'], batch['gmap_vpids'], batch['vp_pos_fts'],
                 batch['gmap_visited_masks'],
-                batch['global_act_labels'], batch['local_act_labels'], batch['knowledge_fts'], batch['crop_fts'],compute_loss
+                batch['global_act_labels'], batch['local_act_labels'], batch['knowledge_fts'], batch['crop_fts'], batch['used_cand_ids'], compute_loss
             )
         elif task.startswith('og'):
             return self.forward_og(
@@ -110,7 +110,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
                 batch['traj_vpids'], batch['traj_cand_vpids'], 
                 batch['gmap_lens'], batch['gmap_step_ids'], batch['gmap_pos_fts'], 
                 batch['gmap_pair_dists'], batch['gmap_vpids'], batch['vp_pos_fts'],
-                batch['obj_labels'], batch['knowledge_fts'], batch['crop_fts'],compute_loss
+                batch['obj_labels'], batch['knowledge_fts'], batch['crop_fts'], batch['used_cand_ids'], compute_loss
             )
         elif task.startswith('valid_sap_og'):
             return self.forward_sap_og(
@@ -121,7 +121,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
                 batch['gmap_lens'], batch['gmap_step_ids'], batch['gmap_pos_fts'], 
                 batch['gmap_pair_dists'], batch['gmap_vpids'], batch['vp_pos_fts'],
                 batch['gmap_visited_masks'], batch['global_act_labels'], batch['local_act_labels'], 
-                batch['obj_labels'],batch['knowledge_fts'], batch['crop_fts']
+                batch['obj_labels'],batch['knowledge_fts'], batch['crop_fts'], batch['used_cand_ids']
             )
         else:
             raise ValueError('invalid task')
@@ -130,12 +130,12 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
         gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,
-        txt_labels, knowledge_fts, crop_fts,compute_loss
+        txt_labels, knowledge_fts, crop_fts, used_cand_ids, compute_loss
     ):
         txt_embeds = self.bert.forward_mlm(
             txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
             traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts
+            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids
         )
 
         # only compute masked tokens for better efficiency
@@ -160,12 +160,12 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
         gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,
-        vp_view_mrc_masks, vp_view_probs, vp_obj_mrc_masks, vp_obj_probs, knowledge_fts, crop_fts,compute_loss=True
+        vp_view_mrc_masks, vp_view_probs, vp_obj_mrc_masks, vp_obj_probs, knowledge_fts, crop_fts, used_cand_ids, compute_loss=True
     ):
         _, vp_embeds = self.bert(
             txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
             traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts,
+            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids,
             return_gmap_embeds=False
         )
         
@@ -212,14 +212,14 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
         gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,
-        gmap_visited_masks, global_act_labels, local_act_labels, knowledge_fts, crop_fts,compute_loss
+        gmap_visited_masks, global_act_labels, local_act_labels, knowledge_fts, crop_fts, used_cand_ids, compute_loss
     ):
         batch_size = txt_ids.size(0)
 
         gmap_embeds, vp_embeds = self.bert(
             txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
             traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts
+            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids
         )
         
         if self.sap_fuse_linear is None:
@@ -274,12 +274,12 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
         gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,
-        obj_labels, knowledge_fts, crop_fts,compute_loss
+        obj_labels, knowledge_fts, crop_fts, used_cand_ids, compute_loss
     ):
         gmap_embeds, vp_embeds = self.bert.forward(
             txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
             traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts,
+            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids,
             return_gmap_embeds=False
         )
 
@@ -310,7 +310,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         gmap_embeds, vp_embeds = self.bert(
             txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
             traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
-            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts
+            gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,knowledge_fts, crop_fts, used_cand_ids
         )
         
         if self.sap_fuse_linear is None:

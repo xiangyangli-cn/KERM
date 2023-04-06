@@ -4,7 +4,7 @@ NUM_GPUS=1
 outdir=../datasets/R2R/exprs_map/pretrain/cmt-vitbase-mlm.mrc.sap-init.lxmert-aug.speaker
 
 # train
-CUDA_VISIBLE_DEVICES='0' python -m torch.distributed.launch \
+CUDA_VISIBLE_DEVICES='5' python3 -m torch.distributed.launch \
     --nproc_per_node=${NUM_GPUS} --node_rank $NODE_RANK \
     train_r2r.py --world_size ${NUM_GPUS} \
     --vlnbert cmt \

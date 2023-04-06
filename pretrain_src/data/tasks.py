@@ -94,6 +94,7 @@ class MlmDataset(Dataset):
         output['vp_angles'] = inputs['vp_angles']
         output['knowledge_fts'] = inputs['knowledge_fts']
         output['crop_fts'] = inputs['crop_fts']
+        output['used_cand_ids'] = inputs['used_cand_ids']
 
         return output
 
@@ -221,6 +222,7 @@ class MrcDataset(Dataset):
 
         output['knowledge_fts'] = inputs['knowledge_fts']
         output['crop_fts'] = inputs['crop_fts']
+        output['used_cand_ids'] = inputs['used_cand_ids']
 
         return output
 
@@ -323,6 +325,7 @@ class SapDataset(Dataset):
         output['global_act_labels'] = inputs['global_act_labels']
         output['knowledge_fts'] = inputs['knowledge_fts']
         output['crop_fts'] = inputs['crop_fts']
+        output['used_cand_ids'] = inputs['used_cand_ids']
         return output
 
 def sap_collate(inputs):
@@ -404,6 +407,7 @@ class OGDataset(Dataset):
         output['obj_labels'] = inputs['obj_labels']
         output['knowledge_fts'] = inputs['knowledge_fts']
         output['crop_fts'] = inputs['crop_fts']
+        output['used_cand_ids'] = inputs['used_cand_ids']
         return output
 
 def og_collate(inputs):

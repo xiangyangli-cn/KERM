@@ -168,7 +168,7 @@ class ReverieTextPathData(object):
             gt_path = gt_path[:TRAIN_MAX_STEP] + [end_vp]
             
         traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, \
-            last_vp_angles, last_vp_objids, knowledge_fts, crop_fts = self.get_traj_pano_fts(scan, gt_path)
+            last_vp_angles, last_vp_objids, knowledge_fts, crop_fts, used_cand_ids = self.get_traj_pano_fts(scan, gt_path)
 
         # global: the first token is [stop]
         gmap_vpids, gmap_step_ids, gmap_visited_masks, gmap_pos_fts, gmap_pair_dists = \
@@ -199,7 +199,8 @@ class ReverieTextPathData(object):
             # 'vp_objids': last_vp_objids,
             'vp_angles': last_vp_angles,
             'knowledge_fts' : knowledge_fts, 
-            'crop_fts' : crop_fts
+            'crop_fts' : crop_fts,
+            'used_cand_ids' : used_cand_ids
         }
 
         if return_obj_label:
@@ -238,7 +239,7 @@ class ReverieTextPathData(object):
         '''
         traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids = [], [], [], [], []
         knowledge_fts, crop_fts = [],[]
-
+        used_cand_ids = []
         for vp in path:
             view_fts, obj_img_fts, obj_attrs = self.get_scanvp_feature(scan, vp)
 
@@ -253,6 +254,7 @@ class ReverieTextPathData(object):
                 view_angle = self.all_point_rel_angles[12][v[0]]
                 view_angles.append([view_angle[0] + v[2], view_angle[1] + v[3]])
                 cand_vpids.append(k)
+            used_cand_ids.append(used_viewidxs)
             # non cand views
             view_img_fts.extend([view_fts[idx] for idx in range(36) if idx not in used_viewidxs])
             view_angles.extend([self.all_point_rel_angles[12][idx] for idx in range(36) if idx not in used_viewidxs])
@@ -315,7 +317,7 @@ class ReverieTextPathData(object):
 
 
         return traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, \
-               last_vp_angles, last_vp_objids, knowledge_fts, crop_fts
+               last_vp_angles, last_vp_objids, knowledge_fts, crop_fts, used_cand_ids
         
     def get_gmap_inputs(self, scan, path, cur_heading, cur_elevation):
         scan_graph = self.graphs[scan]
@@ -463,7 +465,7 @@ class R2RTextPathData(ReverieTextPathData):
             gt_path = gt_path[:TRAIN_MAX_STEP] + [end_vp]
             
         traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, \
-            last_vp_angles, knowledge_fts, crop_fts = self.get_traj_pano_fts(scan, gt_path)
+            last_vp_angles, knowledge_fts, crop_fts, used_cand_ids = self.get_traj_pano_fts(scan, gt_path)
 
         # global: the first token is [stop]
         gmap_vpids, gmap_step_ids, gmap_visited_masks, gmap_pos_fts, gmap_pair_dists = \
@@ -493,6 +495,7 @@ class R2RTextPathData(ReverieTextPathData):
             'vp_angles': last_vp_angles,
             'knowledge_fts': knowledge_fts,
             'crop_fts': crop_fts,
+            'used_cand_ids': used_cand_ids
         }
 
         if return_act_label:
@@ -516,6 +519,7 @@ class R2RTextPathData(ReverieTextPathData):
         traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids = [], [], [], []
         knowledge_fts, crop_fts = [], []
 
+        used_cand_ids = []
         for vp in path:
             view_fts = self.get_scanvp_feature(scan, vp)
 
@@ -530,6 +534,7 @@ class R2RTextPathData(ReverieTextPathData):
                 view_angle = self.all_point_rel_angles[12][v[0]]
                 view_angles.append([view_angle[0] + v[2], view_angle[1] + v[3]])
                 cand_vpids.append(k)
+            used_cand_ids.append(used_viewidxs)
             # non cand views
             view_img_fts.extend([view_fts[idx] for idx in range(36) if idx not in used_viewidxs])
             view_angles.extend([self.all_point_rel_angles[12][idx] for idx in range(36) if idx not in used_viewidxs])
@@ -571,7 +576,7 @@ class R2RTextPathData(ReverieTextPathData):
         crop_fts = torch.tensor(np.concatenate(crop_fts,axis=0))
 
 
-        return traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, last_vp_angles, knowledge_fts, crop_fts
+        return traj_view_img_fts, traj_loc_fts, traj_nav_types, traj_cand_vpids, last_vp_angles, knowledge_fts, crop_fts, used_cand_ids
 
 
 class SoonTextPathData(ReverieTextPathData):
