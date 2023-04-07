@@ -246,9 +246,9 @@ class ReverieTextPathData(object):
             view_img_fts, view_angles, cand_vpids = [], [], []
             # cand views
             nav_cands = self.scanvp_cands['%s_%s'%(scan, vp)]
-            used_viewidxs = set()
+            used_viewidxs = []
             for k, v in nav_cands.items():
-                used_viewidxs.add(v[0])
+                used_viewidxs.append(v[0])
                 view_img_fts.append(view_fts[v[0]])
                 # TODO: whether using correct heading at each step
                 view_angle = self.all_point_rel_angles[12][v[0]]
@@ -285,7 +285,7 @@ class ReverieTextPathData(object):
                 )
             )
             traj_nav_types.append(
-                [1] * len(cand_vpids) + [0] * (36 - len(used_viewidxs)) + [2] * len(obj_img_fts)
+                [1] * len(cand_vpids) + [0] * (36 - len(set(used_viewidxs))) + [2] * len(obj_img_fts)
             )
             traj_cand_vpids.append(cand_vpids)
 
@@ -526,9 +526,9 @@ class R2RTextPathData(ReverieTextPathData):
             view_img_fts, view_angles, cand_vpids = [], [], []
             # cand views
             nav_cands = self.scanvp_cands['%s_%s'%(scan, vp)]
-            used_viewidxs = set()
+            used_viewidxs = []
             for k, v in nav_cands.items():
-                used_viewidxs.add(v[0])
+                used_viewidxs.append(v[0])
                 view_img_fts.append(view_fts[v[0]])
                 # TODO: whether using correct heading at each step
                 view_angle = self.all_point_rel_angles[12][v[0]]
@@ -547,7 +547,7 @@ class R2RTextPathData(ReverieTextPathData):
             # combine pano features
             traj_view_img_fts.append(view_img_fts)
             traj_loc_fts.append(np.concatenate([view_ang_fts, view_box_fts], 1))
-            traj_nav_types.append([1] * len(cand_vpids) + [0] * (36 - len(used_viewidxs)))
+            traj_nav_types.append([1] * len(cand_vpids) + [0] * (36 - len(set(used_viewidxs))))
             traj_cand_vpids.append(cand_vpids)
             
             last_vp_angles = view_angles

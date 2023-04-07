@@ -796,8 +796,8 @@ class GlocalTextPathCMT(BertPreTrainedModel):
 
             for i in range(batch_size):
                 view_ft_id = 0
-                for cand_id in range(36):
-                    if step < len(used_cand_ids[i]) and cand_id in used_cand_ids[i][step]:
+                if step < len(used_cand_ids[i]):
+                    for cand_id in used_cand_ids[i][step]:             
                         traj_view_img_fts[traj_ids][i,view_ft_id] = fusion_fts[i,cand_id] + traj_view_img_fts[traj_ids][i,view_ft_id]
                         view_ft_id += 1
 
