@@ -817,10 +817,10 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
 
         for i in range(batch_size):
             view_ft_id = 0
-            for cand_id in range(36):
-                if cand_id in used_cand_ids[i]:
-                    view_img_fts[i,view_ft_id] = fusion_fts[i,cand_id] + view_img_fts[i,view_ft_id]
-                    view_ft_id += 1
+            for cand_id in used_cand_ids[i]:
+                
+                view_img_fts[i,view_ft_id] = fusion_fts[i,cand_id] + view_img_fts[i,view_ft_id]
+                view_ft_id += 1
 
             for cand_id in range(36):
                 if cand_id not in used_cand_ids[i]:
@@ -831,7 +831,6 @@ class GlocalTextPathNavCMT(BertPreTrainedModel):
         view_img_embeds = self.img_embeddings.img_layer_norm(
             self.img_embeddings.img_linear(view_img_fts)
         )
-        
 
         if has_obj:
             if self.img_embeddings.obj_linear is None:
