@@ -104,7 +104,7 @@ def main(opts):
         model_config.pretrain_tasks.extend(train_dataset_config['tasks'])
     model_config.pretrain_tasks = set(model_config.pretrain_tasks)
 
-    tokenizer = AutoTokenizer.from_pretrained(model_config.lang_bert_name,mirror='https://mirrors.tuna.tsinghua.edu.cn/hugging-face-models')
+    tokenizer = AutoTokenizer.from_pretrained('../bert-base')
 
     # Prepare model
     if opts.checkpoint:
@@ -112,7 +112,7 @@ def main(opts):
     else:
         checkpoint = {}
         if opts.init_pretrained == 'bert':
-            tmp = AutoModel.from_pretrained(model_config.lang_bert_name,mirror='https://mirrors.tuna.tsinghua.edu.cn/hugging-face-models')
+            tmp = AutoModel.from_pretrained('../bert-base')
             for param_name, param in tmp.named_parameters():
                 checkpoint[param_name] = param
             if model_config.lang_bert_name == 'xlm-roberta-base':
