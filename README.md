@@ -9,7 +9,7 @@ This repository is the official implementation of **[KERM: Knowledge Enhanced Re
 
 ## Requirements
 
-1. Install Matterport3D simulators: follow instructions [here](https://github.com/peteanderson80/Matterport3DSimulator). We use the latest version.
+1. Install Matterport3D simulators: follow instructions [here](https://github.com/peteanderson80/Matterport3DSimulator).
 ```
 export PYTHONPATH=Matterport3DSimulator/build:$PYTHONPATH
 ```
