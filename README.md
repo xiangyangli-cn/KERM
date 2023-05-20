@@ -63,8 +63,11 @@ bash scripts/run_reverie.sh # (run_soon.sh, run_r2r.sh)
 @InProceedings{Li2023KERM,
   author  = {Xiangyang Li and Zihan Wang and Jiahao Yang and Yaowei Wang and Shuqiang Jiang},
   title   = {{KERM: K}nowledge Enhanced Reasoning for Vision-and-Language Navigation},
-  booktitle = {CVPR},
-  year    = {2023}
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month     = {June},
+  pages     = {2583-2592},
+  year    = {2023},
+  }
   ```
 
 ## Acknowledgments
