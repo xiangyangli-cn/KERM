@@ -303,7 +303,7 @@ class GlocalTextPathCMTPreTraining(BertPreTrainedModel):
         self, txt_ids, txt_lens, traj_view_img_fts, traj_obj_img_fts, traj_loc_fts, traj_nav_types, 
         traj_step_lens, traj_vp_view_lens, traj_vp_obj_lens, traj_vpids, traj_cand_vpids,
         gmap_lens, gmap_step_ids, gmap_pos_fts, gmap_pair_dists, gmap_vpids, vp_pos_fts,
-        gmap_visited_masks, global_act_labels, local_act_labels, obj_labels,knowledge_fts, crop_fts
+        gmap_visited_masks, global_act_labels, local_act_labels, obj_labels,knowledge_fts, crop_fts, used_cand_ids
     ):
         batch_size = txt_ids.size(0)
 
